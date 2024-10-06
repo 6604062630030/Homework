@@ -118,10 +118,7 @@ private:
     X[2] = detX3/detA;
     X[3] = detX4/detA;
 
-    cout << X[0] << " ";
-    cout << X[1] << " ";
-    cout << X[2] << " ";
-    cout << X[3] << " ";
+    cout << "f(x) = " << X[0] << " + (" << X[1] << ")*x1" << " + (" << X[2] << ")*x2" << " + (" << X[3] << ")*x3" ;
   }
 
   double det_4x4(double arr[4][4]) {
