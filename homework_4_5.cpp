@@ -6,55 +6,55 @@ using namespace std;
 
 int main() {
 
-  int n, temp;
-  unordered_map<int, int> intersect;
-  cin >> n;
+    int n, temp;
+    unordered_map<int, int> m1, m2, all;
+    vector<int> m1Order, m2Order, allOrder;
+    cin >> n;
 
-  int *arr1 = new int[n];
-  int *arr2 = new int[n];
-  for (int i = 0;i < n; i++) {
-    cin >> temp;
-    arr1[i] = temp;
-    if (intersect.find(temp) == intersect.end()) {
-      intersect[temp] = 1;
+    int arr1[n];
+    int arr2[n];
+    for (int i = 0; i < n; i++) {
+        cin >> arr1[i];
+        if (m1.find(arr1[i]) == m1.end()) {
+            m1Order.push_back(arr1[i]);
+        }
+        if (all.find(arr1[i]) == all.end()) {
+            allOrder.push_back(arr1[i]);
+        }
+        m1[arr1[i]]++;
+        all[arr1[i]]++;
     }
-    else {
-      intersect[temp]++;
+    for (int i = 0; i < n; i++) {
+        cin >> arr2[i];
+        if (m2.find(arr2[i]) == m2.end()) {
+            m2Order.push_back(arr2[i]);
+        }
+        if (all.find(arr2[i]) == all.end()) {
+            allOrder.push_back(arr2[i]);
+        }
+        m2[arr2[i]]++;
+        all[arr2[i]]++;
     }
-  }
 
-  for (int i = 0;i < n; i++) {
-    cin >> temp;
-    arr2[i] = temp;
-    if (intersect.find(temp) == intersect.end()) {
-      intersect[temp] = 1;
+    // copy to vector
+    vector<int> Intersect, Union;
+    for (int i : m1Order) {
+        if (m2.find(i) != m2.end()) {
+            Intersect.push_back(i);
+        }
     }
-    else {
-      intersect[temp]++;
+    for (int i : allOrder) {
+        Union.push_back(i);
     }
-  }
 
-  // copy to vector
-  vector<int> dupe;
-  vector<int> all;
-  for (auto it = intersect.begin(); it != intersect.end(); it++) {
-    if (it->second > 1) {
-      dupe.push_back(it->first);
+    // print
+    for (int i = 0; i < Intersect.size(); i++) {
+        cout << Intersect[i] << " ";
     }
-  }
-  for (auto pair : intersect) {
-    all.push_back(pair.first);
-  }
+    cout << endl;
+    for (int i = 0; i < Union.size(); i++) {
+        cout << Union[i] << " ";
+    }
 
-  // printing
-  for (int i = dupe.size() - 1; i >= 0; i--) {
-    cout << dupe[i] << " ";
-  }
-  cout << endl;
-
-  for (int i = all.size() - 1; i >= 0; i--) {
-    cout << all[i] << " ";
-  }
-
-  return 0;
+    return 0;
 }

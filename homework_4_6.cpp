@@ -1,85 +1,99 @@
 #include <iostream>
-#include <unordered_map>
-#include <stack>
 #include <vector>
+#include <stack>
+#include<map>
 
 using namespace std;
 
-void selection(int *arr, int n);
-void selection_Vec(vector<int> &arr, int n);
+
+void selection(vector<int> &arr, int n);
+int find(vector<char> &str, char target);
+int ToInt(char c);
 
 int main() {
 
-  int n;
+  int n, temp;
   cin >> n;
 
-  int *arr = new int[n];
+  vector<int> arr;
   for (int i = 0; i < n; i++) {
-    cin >> arr[i];
+    cin >> temp;
+    arr.push_back(temp);
   }
   selection(arr, n);
 
-  string str1;
+  // 1
+  string str;
   for (int i = 0; i < n; i++) {
-    str1 += to_string(arr[i]);
+    str += to_string(arr[i]);
   }
-  cout << str1 << endl;
+  cout << str << endl;
 
-  // 2 // eror test case 2
-  stack<char> s;
-  unordered_map<char, int> dupe;
-  for (int i = 0; i < str1.length(); i++) {
-    if (s.empty() || s.top() == str1[i]) {
-      s.push(str1[i]);
-      cout << str1[i] << endl;
+  // 2
+  map<int, int> mp;
+  stack<char> stk;
+  for (int i = 0; i < str.size(); i++) { //count max 
+    if (stk.empty()) {
+      stk.push(str[i]);
+      if (mp.find(str[i]) == mp.end()) {
+        mp[ToInt(str[i])] = 1;
+        //cout << "add" << ToInt(str[i]) << endl;
+      }
+    }
+    else if (str[i] == stk.top()) {
+      stk.push(str[i]);
+      if (mp[ToInt(str[i])] < stk.size()) {
+        mp[ToInt(str[i])] = stk.size();
+        //cout << "update" << ToInt(str[i]) << " " << stk.size() << endl;
+      }
     }
     else {
-      dupe[s.top()] = s.size();
-      while (!s.empty()) { //clear stack
-        s.pop();
+      while (!stk.empty()) {
+        stk.pop();
       }
-      s.push(str1[i]);
+      stk.push(str[i]);
+      if (mp.find(ToInt(str[i])) == mp.end()) {
+        mp[ToInt(str[i])] = 1;
+        //cout << "added" << ToInt(str[i]) << endl;
+      }
     }
   }
-  // Handle the last element in the stack
-  if (!s.empty()) {
-    dupe[s.top()] = s.size();
-  }
 
-  int maxDupe = 0;
-  for (auto pair : dupe) {
-    if (pair.second > maxDupe) {
-      maxDupe = pair.second;
-    }
-    cout << "pair " << pair.first << " : " << pair.second << endl;
-  }
-
-  vector<int> keep;
-  for (auto pair : dupe) {
-    if (pair.second == maxDupe) {
-      keep.push_back(pair.first - '0');
+  int max = 0;
+  for (auto pair : mp) {
+    if (pair.second > max) {
+      max = pair.second;
     }
   }
-  selection_Vec(keep, keep.size());
 
-  for (int i = 0; i < keep.size(); i++) {
-    cout << keep[i] << " ";
+  vector<int> ans;
+  for (auto pair : mp) {
+    if (pair.second == max) {
+      ans.push_back(pair.first);
+      //cout << "debug: " << pair.first << endl;
+    }
+  }
+  selection(ans, ans.size());
+
+  for (int i = 0; i < ans.size(); i++) {
+    cout << ans[i] << " ";
   }
   cout << endl;
 
   // 3
   char t = '-';
-  for (int i = 0; i < str1.size(); i++) {
-    if (str1[i] != t) {
-      cout << str1[i];
-      t = str1[i];
+  for (int i = 0; i < str.size(); i++) {
+    if (str[i] != t) {
+      cout << str[i];
+      t = str[i];
     }
   }
 
   return 0;
 }
 
-void selection(int *arr, int n) {
+void selection(vector<int> &arr, int n) {
+
   for (int i = 0; i < n - 1; i++) {
     int min = i;
     for (int j = i + 1; j < n; j++) {
@@ -91,15 +105,15 @@ void selection(int *arr, int n) {
   }
 }
 
-void selection_Vec(vector<int> &arr, int n) {
-
-  for (int i = 0; i < n - 1; i++) {
-    int min = i;
-    for (int j = i + 1; j < n; j++) {
-      if (arr[j] < arr[min]) {
-        min = j;
-      }
+int find(vector<char> &str, char target) {
+  for (int i = 0; i < str.size(); i++) {
+    if (str[i] == target) {
+      return i;
     }
-    swap(arr[i], arr[min]);
   }
+  return -1;
+}
+
+int ToInt(char c) {
+  return c - '0';
 }
