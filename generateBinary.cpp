@@ -21,6 +21,17 @@ void genBinary(int *arr, int l, int r) {
   }
 }
 
+void genbi(int *arr, int l, int r) {
+  if (l == r) {
+    printSol(arr, r);
+  }
+  else {
+    arr[l] = 0;
+    genbi(arr, l + 1, r);
+    arr[l] = 1;
+    genbi(arr, l + 1, r);
+  }
+}
 
 int main() {
   int n = 4;
